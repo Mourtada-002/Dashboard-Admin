@@ -7,40 +7,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #3b82f6;
-            --secondary-color: #10b981;
-            --danger-color: #ef4444;
-            --warning-color: #f59e0b;
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-5px);
-            transition: transform 0.3s ease;
-        }
-        
-        .sidebar-link.active {
-            background-color: rgba(59, 130, 246, 0.1);
-            border-left: 4px solid var(--primary-color);
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-            
-            .sidebar.mobile-open {
-                transform: translateX(0);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-100">
     <div class="flex h-screen">
+        <!-- Overlay pour mobile -->
+        <div class="overlay md:hidden"></div>
+        
         <!-- Sidebar -->
-        <aside class="sidebar w-64 bg-white shadow-lg fixed md:relative z-20">
+        <aside class="sidebar w-64 bg-white shadow-lg fixed md:relative z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
             <div class="p-6 border-b">
                 <h1 class="text-2xl font-bold text-blue-600 flex items-center">
                     <i class="fas fa-chart-line mr-3"></i>
@@ -50,23 +25,23 @@
             </div>
             
             <nav class="mt-6">
-                <a href="#" class="sidebar-link active flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50">
+                <a href="#" class="sidebar-link active flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50" data-tab="dashboard">
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Tableau de bord
                 </a>
-                <a href="#" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50">
+                <a href="#" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50" data-tab="users">
                     <i class="fas fa-users mr-3"></i>
                     Utilisateurs
                 </a>
-                <a href="#" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50">
+                <a href="#" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50" data-tab="stats">
                     <i class="fas fa-chart-bar mr-3"></i>
                     Statistiques
                 </a>
-                <a href="#" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50">
+                <a href="#" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50" data-tab="settings">
                     <i class="fas fa-cog mr-3"></i>
                     Paramètres
                 </a>
-                <a href="#" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50">
+                <a href="#" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50" data-tab="reports">
                     <i class="fas fa-file-alt mr-3"></i>
                     Rapports
                 </a>
@@ -86,17 +61,21 @@
         </aside>
         
         <!-- Contenu principal -->
-        <main class="flex-1 overflow-y-auto p-6">
+        <main class="flex-1 overflow-y-auto p-4 md:p-6 w-full">
             <!-- Header -->
-            <header class="flex justify-between items-center mb-8">
+            <header class="flex justify-between items-center mb-6 md:mb-8">
                 <div>
-                    <h2 class="text-3xl font-bold text-gray-800">Tableau de bord</h2>
-                    <p class="text-gray-600">Bienvenue dans votre espace d'administration</p>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Tableau de bord</h2>
+                    <p class="text-gray-600 text-sm md:text-base">Bienvenue dans votre espace d'administration</p>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <div class="relative hidden md:block">
                         <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                        <input type="text" placeholder="Rechercher..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" placeholder="Rechercher..." class="search-input pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+                    </div>
+                    <div class="relative md:hidden">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        <input type="text" placeholder="Rechercher..." class="mobile-search-input pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-40">
                     </div>
                     <button class="md:hidden" id="mobile-menu-button">
                         <i class="fas fa-bars text-2xl text-gray-700"></i>
@@ -104,450 +83,254 @@
                 </div>
             </header>
             
-            <!-- Cartes de statistiques -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-500">Utilisateurs total</p>
-                            <h3 class="text-3xl font-bold mt-2" id="total-users">1,248</h3>
-                        </div>
-                        <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center">
-                            <i class="fas fa-users text-2xl text-blue-600"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i> 12% ce mois</span>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-500">Nouveaux utilisateurs</p>
-                            <h3 class="text-3xl font-bold mt-2" id="new-users">48</h3>
-                        </div>
-                        <div class="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center">
-                            <i class="fas fa-user-plus text-2xl text-green-600"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i> 8% cette semaine</span>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-500">Taux d'activité</p>
-                            <h3 class="text-3xl font-bold mt-2" id="activity-rate">68%</h3>
-                        </div>
-                        <div class="w-14 h-14 rounded-full bg-purple-100 flex items-center justify-center">
-                            <i class="fas fa-chart-pie text-2xl text-purple-600"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <span class="text-red-500 text-sm"><i class="fas fa-arrow-down mr-1"></i> 3% ce mois</span>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-500">Temps moyen</p>
-                            <h3 class="text-3xl font-bold mt-2" id="avg-time">4.2m</h3>
-                        </div>
-                        <div class="w-14 h-14 rounded-full bg-yellow-100 flex items-center justify-center">
-                            <i class="fas fa-clock text-2xl text-yellow-600"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i> 5% ce mois</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Graphiques et tableau -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                <!-- Graphique des utilisateurs -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xl font-bold text-gray-800">Utilisateurs actifs</h3>
-                        <select class="border rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500" id="chart-period">
-                            <option value="week">Cette semaine</option>
-                            <option value="month" selected>Ce mois</option>
-                            <option value="year">Cette année</option>
-                        </select>
-                    </div>
-                    <div class="h-72">
-                        <canvas id="usersChart"></canvas>
-                    </div>
-                </div>
-                
-                <!-- Graphique de répartition -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h3 class="text-xl font-bold text-gray-800 mb-6">Répartition des utilisateurs</h3>
-                    <div class="h-72">
-                        <canvas id="distributionChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Tableau des utilisateurs -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                <div class="p-6 border-b">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xl font-bold text-gray-800">Gestion des utilisateurs</h3>
-                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
-                            <i class="fas fa-user-plus mr-2"></i>
-                            Ajouter un utilisateur
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="p-6">
-                    <!-- Barre de recherche et filtres -->
-                    <div class="flex flex-col md:flex-row justify-between mb-6 space-y-4 md:space-y-0">
-                        <div class="relative md:w-1/3">
-                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                            <input type="text" id="user-search" placeholder="Rechercher un utilisateur..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <!-- Contenu des onglets -->
+            <div id="tab-content">
+                <!-- Onglet Dashboard -->
+                <div id="dashboard-tab" class="tab-pane active">
+                    <!-- Cartes de statistiques -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+                        <div class="bg-white rounded-xl shadow-md p-4 md:p-6 card-hover">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm md:text-base">Utilisateurs total</p>
+                                    <h3 class="text-2xl md:text-3xl font-bold mt-1 md:mt-2" id="total-users">1,248</h3>
+                                </div>
+                                <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-blue-100 flex items-center justify-center">
+                                    <i class="fas fa-users text-xl md:text-2xl text-blue-600"></i>
+                                </div>
+                            </div>
+                            <div class="mt-3 md:mt-4">
+                                <span class="text-green-500 text-xs md:text-sm"><i class="fas fa-arrow-up mr-1"></i> 12% ce mois</span>
+                            </div>
                         </div>
                         
-                        <div class="flex space-x-4">
-                            <select class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="filter-role">
-                                <option value="">Tous les rôles</option>
-                                <option value="admin">Administrateur</option>
-                                <option value="user">Utilisateur</option>
-                                <option value="moderator">Modérateur</option>
-                            </select>
+                        <div class="bg-white rounded-xl shadow-md p-4 md:p-6 card-hover">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm md:text-base">Nouveaux utilisateurs</p>
+                                    <h3 class="text-2xl md:text-3xl font-bold mt-1 md:mt-2" id="new-users">48</h3>
+                                </div>
+                                <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-green-100 flex items-center justify-center">
+                                    <i class="fas fa-user-plus text-xl md:text-2xl text-green-600"></i>
+                                </div>
+                            </div>
+                            <div class="mt-3 md:mt-4">
+                                <span class="text-green-500 text-xs md:text-sm"><i class="fas fa-arrow-up mr-1"></i> 8% cette semaine</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl shadow-md p-4 md:p-6 card-hover">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm md:text-base">Taux d'activité</p>
+                                    <h3 class="text-2xl md:text-3xl font-bold mt-1 md:mt-2" id="activity-rate">68%</h3>
+                                </div>
+                                <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-purple-100 flex items-center justify-center">
+                                    <i class="fas fa-chart-pie text-xl md:text-2xl text-purple-600"></i>
+                                </div>
+                            </div>
+                            <div class="mt-3 md:mt-4">
+                                <span class="text-red-500 text-xs md:text-sm"><i class="fas fa-arrow-down mr-1"></i> 3% ce mois</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl shadow-md p-4 md:p-6 card-hover">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm md:text-base">Temps moyen</p>
+                                    <h3 class="text-2xl md:text-3xl font-bold mt-1 md:mt-2" id="avg-time">4.2m</h3>
+                                </div>
+                                <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-yellow-100 flex items-center justify-center">
+                                    <i class="fas fa-clock text-xl md:text-2xl text-yellow-600"></i>
+                                </div>
+                            </div>
+                            <div class="mt-3 md:mt-4">
+                                <span class="text-green-500 text-xs md:text-sm"><i class="fas fa-arrow-up mr-1"></i> 5% ce mois</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Graphiques et tableau -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8">
+                        <!-- Graphique des utilisateurs -->
+                        <div class="bg-white rounded-xl shadow-md p-4 md:p-6">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-2">
+                                <h3 class="text-lg md:text-xl font-bold text-gray-800">Utilisateurs actifs</h3>
+                                <select class="border rounded-lg px-3 py-1 md:py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto" id="chart-period">
+                                    <option value="week">Cette semaine</option>
+                                    <option value="month" selected>Ce mois</option>
+                                    <option value="year">Cette année</option>
+                                </select>
+                            </div>
+                            <div class="h-60 md:h-72">
+                                <canvas id="usersChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Graphique de répartition -->
+                        <div class="bg-white rounded-xl shadow-md p-4 md:p-6">
+                            <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-4 md:mb-6">Répartition des utilisateurs</h3>
+                            <div class="h-60 md:h-72">
+                                <canvas id="distributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tableau des utilisateurs -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="p-4 md:p-6 border-b">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                <h3 class="text-lg md:text-xl font-bold text-gray-800">Gestion des utilisateurs</h3>
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center w-full md:w-auto justify-center" id="add-user-btn">
+                                    <i class="fas fa-user-plus mr-2"></i>
+                                    Ajouter un utilisateur
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 md:p-6">
+                            <!-- Barre de recherche et filtres -->
+                            <div class="flex flex-col md:flex-row justify-between mb-4 md:mb-6 gap-4">
+                                <div class="relative w-full md:w-1/3">
+                                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                                    <input type="text" id="user-search" placeholder="Rechercher un utilisateur..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                
+                                <div class="flex flex-col sm:flex-row gap-2 md:gap-4">
+                                    <select class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="filter-role">
+                                        <option value="">Tous les rôles</option>
+                                        <option value="admin">Administrateur</option>
+                                        <option value="user">Utilisateur</option>
+                                        <option value="moderator">Modérateur</option>
+                                    </select>
+                                    
+                                    <select class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="filter-status">
+                                        <option value="">Tous les statuts</option>
+                                        <option value="active">Actif</option>
+                                        <option value="inactive">Inactif</option>
+                                    </select>
+                                </div>
+                            </div>
                             
-                            <select class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="filter-status">
-                                <option value="">Tous les statuts</option>
-                                <option value="active">Actif</option>
-                                <option value="inactive">Inactif</option>
-                            </select>
+                            <!-- Tableau -->
+                            <div class="overflow-x-auto">
+                                <table class="w-full min-w-[600px]">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="py-3 px-4 text-left font-medium text-gray-700">Utilisateur</th>
+                                            <th class="py-3 px-4 text-left font-medium text-gray-700">Email</th>
+                                            <th class="py-3 px-4 text-left font-medium text-gray-700">Rôle</th>
+                                            <th class="py-3 px-4 text-left font-medium text-gray-700">Date d'inscription</th>
+                                            <th class="py-3 px-4 text-left font-medium text-gray-700">Statut</th>
+                                            <th class="py-3 px-4 text-left font-medium text-gray-700">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="users-table-body">
+                                        <!-- Les données seront insérées par JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Pagination -->
+                            <div class="flex flex-col md:flex-row justify-between items-center mt-4 md:mt-6 gap-4">
+                                <p class="text-gray-600 text-sm md:text-base" id="user-count">Affichage de 10 utilisateurs sur 1248</p>
+                                <div class="flex space-x-2">
+                                    <button class="px-3 py-1 border rounded-lg text-gray-700 hover:bg-gray-50 prev-page">Précédent</button>
+                                    <button class="px-3 py-1 border rounded-lg bg-blue-600 text-white page-btn active" data-page="1">1</button>
+                                    <button class="px-3 py-1 border rounded-lg text-gray-700 hover:bg-gray-50 page-btn" data-page="2">2</button>
+                                    <button class="px-3 py-1 border rounded-lg text-gray-700 hover:bg-gray-50 page-btn" data-page="3">3</button>
+                                    <button class="px-3 py-1 border rounded-lg text-gray-700 hover:bg-gray-50 next-page">Suivant</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <!-- Tableau -->
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="py-3 px-4 text-left font-medium text-gray-700">Utilisateur</th>
-                                    <th class="py-3 px-4 text-left font-medium text-gray-700">Email</th>
-                                    <th class="py-3 px-4 text-left font-medium text-gray-700">Rôle</th>
-                                    <th class="py-3 px-4 text-left font-medium text-gray-700">Date d'inscription</th>
-                                    <th class="py-3 px-4 text-left font-medium text-gray-700">Statut</th>
-                                    <th class="py-3 px-4 text-left font-medium text-gray-700">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="users-table-body">
-                                <!-- Les données seront insérées par JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- Pagination -->
-                    <div class="flex justify-between items-center mt-6">
-                        <p class="text-gray-600" id="user-count">Affichage de 10 utilisateurs sur 1248</p>
-                        <div class="flex space-x-2">
-                            <button class="px-3 py-1 border rounded-lg text-gray-700 hover:bg-gray-50">Précédent</button>
-                            <button class="px-3 py-1 border rounded-lg bg-blue-600 text-white">1</button>
-                            <button class="px-3 py-1 border rounded-lg text-gray-700 hover:bg-gray-50">2</button>
-                            <button class="px-3 py-1 border rounded-lg text-gray-700 hover:bg-gray-50">3</button>
-                            <button class="px-3 py-1 border rounded-lg text-gray-700 hover:bg-gray-50">Suivant</button>
+                </div>
+                
+                <!-- Onglet Utilisateurs -->
+                <div id="users-tab" class="tab-pane">
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Gestion avancée des utilisateurs</h3>
+                        <p class="text-gray-600 mb-6">Cette section sera développée pour inclure des fonctionnalités avancées de gestion des utilisateurs.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="border rounded-lg p-4">
+                                <h4 class="font-bold text-lg mb-2">Importation d'utilisateurs</h4>
+                                <p class="text-gray-600 mb-4">Importez des utilisateurs depuis un fichier CSV ou Excel</p>
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                                    <i class="fas fa-upload mr-2"></i>Importer
+                                </button>
+                            </div>
+                            <div class="border rounded-lg p-4">
+                                <h4 class="font-bold text-lg mb-2">Exportation de données</h4>
+                                <p class="text-gray-600 mb-4">Exportez la liste des utilisateurs dans différents formats</p>
+                                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                                    <i class="fas fa-download mr-2"></i>Exporter
+                                </button>
+                            </div>
                         </div>
+                    </div>
+                </div>
+                
+                <!-- Onglet Statistiques -->
+                <div id="stats-tab" class="tab-pane">
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Statistiques détaillées</h3>
+                        <p class="text-gray-600 mb-6">Des statistiques avancées seront disponibles dans cette section.</p>
+                    </div>
+                </div>
+                
+                <!-- Onglet Paramètres -->
+                <div id="settings-tab" class="tab-pane">
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Paramètres du système</h3>
+                        <p class="text-gray-600 mb-6">Configurez les paramètres de votre tableau de bord ici.</p>
+                    </div>
+                </div>
+                
+                <!-- Onglet Rapports -->
+                <div id="reports-tab" class="tab-pane">
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Rapports et analyses</h3>
+                        <p class="text-gray-600 mb-6">Générez et consultez des rapports détaillés sur l'activité.</p>
                     </div>
                 </div>
             </div>
             
             <!-- Footer -->
-            <footer class="mt-8 text-center text-gray-600">
+            <footer class="mt-6 md:mt-8 text-center text-gray-600 text-sm md:text-base">
                 <p>Dashboard Admin &copy; 2023 - Tous droits réservés</p>
             </footer>
         </main>
     </div>
 
-    <script>
-        // Données des utilisateurs
-        const usersData = [
-            { id: 1, name: "Jean Dupont", email: "jean.dupont@exemple.com", role: "admin", registrationDate: "2023-01-15", status: "active", avatarColor: "bg-blue-500" },
-            { id: 2, name: "Marie Martin", email: "marie.martin@exemple.com", role: "user", registrationDate: "2023-02-20", status: "active", avatarColor: "bg-pink-500" },
-            { id: 3, name: "Pierre Bernard", email: "pierre.bernard@exemple.com", role: "moderator", registrationDate: "2023-03-10", status: "inactive", avatarColor: "bg-green-500" },
-            { id: 4, name: "Sophie Leroy", email: "sophie.leroy@exemple.com", role: "user", registrationDate: "2023-04-05", status: "active", avatarColor: "bg-purple-500" },
-            { id: 5, name: "Thomas Petit", email: "thomas.petit@exemple.com", role: "user", registrationDate: "2023-05-18", status: "active", avatarColor: "bg-yellow-500" },
-            { id: 6, name: "Julie Moreau", email: "julie.moreau@exemple.com", role: "admin", registrationDate: "2023-06-22", status: "active", avatarColor: "bg-red-500" },
-            { id: 7, name: "David Laurent", email: "david.laurent@exemple.com", role: "user", registrationDate: "2023-07-30", status: "inactive", avatarColor: "bg-indigo-500" },
-            { id: 8, name: "Laura Simon", email: "laura.simon@exemple.com", role: "moderator", registrationDate: "2023-08-14", status: "active", avatarColor: "bg-teal-500" },
-            { id: 9, name: "Marc Lefevre", email: "marc.lefevre@exemple.com", role: "user", registrationDate: "2023-09-05", status: "active", avatarColor: "bg-orange-500" },
-            { id: 10, name: "Céline Roux", email: "celine.roux@exemple.com", role: "user", registrationDate: "2023-10-11", status: "inactive", avatarColor: "bg-cyan-500" }
-        ];
-        
-        // Initialisation du tableau des utilisateurs
-        function renderUsersTable(users = usersData) {
-            const tbody = document.getElementById('users-table-body');
-            tbody.innerHTML = '';
-            
-            users.forEach(user => {
-                const row = document.createElement('tr');
-                row.className = 'border-b hover:bg-gray-50';
-                
-                // Formatage de la date
-                const registrationDate = new Date(user.registrationDate);
-                const formattedDate = registrationDate.toLocaleDateString('fr-FR');
-                
-                // Détermination de la couleur du badge de statut
-                const statusClass = user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
-                const statusText = user.status === 'active' ? 'Actif' : 'Inactif';
-                
-                // Détermination de la couleur du badge de rôle
-                let roleClass, roleText;
-                switch(user.role) {
-                    case 'admin':
-                        roleClass = 'bg-blue-100 text-blue-800';
-                        roleText = 'Administrateur';
-                        break;
-                    case 'moderator':
-                        roleClass = 'bg-purple-100 text-purple-800';
-                        roleText = 'Modérateur';
-                        break;
-                    default:
-                        roleClass = 'bg-gray-100 text-gray-800';
-                        roleText = 'Utilisateur';
-                }
-                
-                row.innerHTML = `
-                    <td class="py-4 px-4">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-full ${user.avatarColor} flex items-center justify-center text-white font-bold mr-3">
-                                ${user.name.charAt(0)}
-                            </div>
-                            <div>
-                                <p class="font-medium">${user.name}</p>
-                                <p class="text-gray-500 text-sm">ID: ${user.id}</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="py-4 px-4">${user.email}</td>
-                    <td class="py-4 px-4">
-                        <span class="px-3 py-1 rounded-full text-xs font-medium ${roleClass}">${roleText}</span>
-                    </td>
-                    <td class="py-4 px-4">${formattedDate}</td>
-                    <td class="py-4 px-4">
-                        <span class="px-3 py-1 rounded-full text-xs font-medium ${statusClass}">${statusText}</span>
-                    </td>
-                    <td class="py-4 px-4">
-                        <div class="flex space-x-2">
-                            <button class="text-blue-600 hover:text-blue-800" title="Modifier">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-green-600 hover:text-green-800" title="Voir détails">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-800" title="Supprimer">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                
-                tbody.appendChild(row);
-            });
-            
-            // Mise à jour du compteur
-            document.getElementById('user-count').textContent = `Affichage de ${users.length} utilisateurs sur ${usersData.length}`;
-        }
-        
-        // Filtrage des utilisateurs
-        function filterUsers() {
-            const searchTerm = document.getElementById('user-search').value.toLowerCase();
-            const roleFilter = document.getElementById('filter-role').value;
-            const statusFilter = document.getElementById('filter-status').value;
-            
-            const filteredUsers = usersData.filter(user => {
-                const matchesSearch = user.name.toLowerCase().includes(searchTerm) || 
-                                    user.email.toLowerCase().includes(searchTerm);
-                const matchesRole = !roleFilter || user.role === roleFilter;
-                const matchesStatus = !statusFilter || user.status === statusFilter;
-                
-                return matchesSearch && matchesRole && matchesStatus;
-            });
-            
-            renderUsersTable(filteredUsers);
-        }
-        
-        // Initialisation des graphiques
-        function initCharts() {
-            // Graphique des utilisateurs actifs
-            const usersCtx = document.getElementById('usersChart').getContext('2d');
-            const usersChart = new Chart(usersCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
-                    datasets: [{
-                        label: 'Utilisateurs actifs',
-                        data: [650, 700, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1248],
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                drawBorder: false
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return value.toLocaleString('fr-FR');
-                                }
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            });
-            
-            // Graphique de répartition
-            const distributionCtx = document.getElementById('distributionChart').getContext('2d');
-            const distributionChart = new Chart(distributionCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Administrateurs', 'Modérateurs', 'Utilisateurs'],
-                    datasets: [{
-                        data: [15, 25, 60],
-                        backgroundColor: [
-                            '#3b82f6',
-                            '#8b5cf6',
-                            '#10b981'
-                        ],
-                        borderWidth: 0,
-                        hoverOffset: 15
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true
-                            }
-                        }
-                    },
-                    cutout: '70%'
-                }
-            });
-            
-            // Mise à jour du graphique en fonction de la période sélectionnée
-            document.getElementById('chart-period').addEventListener('change', function() {
-                const period = this.value;
-                let newData;
-                
-                if (period === 'week') {
-                    newData = [1100, 1150, 1200, 1220, 1230, 1240, 1248];
-                    usersChart.data.labels = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-                } else if (period === 'month') {
-                    newData = [650, 700, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1248];
-                    usersChart.data.labels = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
-                } else {
-                    newData = [400, 500, 600, 700, 800, 900, 1000, 1100, 1150, 1200, 1220, 1248];
-                    usersChart.data.labels = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
-                }
-                
-                usersChart.data.datasets[0].data = newData;
-                usersChart.update();
-            });
-        }
-        
-        // Animation des statistiques
-        function animateStats() {
-            const stats = {
-                totalUsers: { element: document.getElementById('total-users'), target: 1248, duration: 2000 },
-                newUsers: { element: document.getElementById('new-users'), target: 48, duration: 1500 },
-                activityRate: { element: document.getElementById('activity-rate'), target: 68, duration: 1800 },
-                avgTime: { element: document.getElementById('avg-time'), target: 4.2, duration: 1600 }
-            };
-            
-            Object.values(stats).forEach(stat => {
-                const increment = stat.target / (stat.duration / 16); // 16ms par frame
-                let current = 0;
-                
-                const timer = setInterval(() => {
-                    current += increment;
-                    if (current >= stat.target) {
-                        current = stat.target;
-                        clearInterval(timer);
-                    }
-                    
-                    // Formatage spécial pour le temps moyen
-                    if (stat.element.id === 'avg-time') {
-                        stat.element.textContent = current.toFixed(1) + 'm';
-                    } else if (stat.element.id === 'activity-rate') {
-                        stat.element.textContent = Math.floor(current) + '%';
-                    } else if (stat.element.id === 'total-users') {
-                        stat.element.textContent = Math.floor(current).toLocaleString('fr-FR');
-                    } else {
-                        stat.element.textContent = Math.floor(current);
-                    }
-                }, 16);
-            });
-        }
-        
-        // Menu mobile
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            document.querySelector('.sidebar').classList.toggle('mobile-open');
-        });
-        
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            renderUsersTable();
-            initCharts();
-            animateStats();
-            
-            // Événements de filtrage
-            document.getElementById('user-search').addEventListener('input', filterUsers);
-            document.getElementById('filter-role').addEventListener('change', filterUsers);
-            document.getElementById('filter-status').addEventListener('change', filterUsers);
-            
-            // Ajout d'un événement pour les boutons d'action
-            document.addEventListener('click', function(e) {
-                if (e.target.closest('.fa-trash')) {
-                    const userName = e.target.closest('tr').querySelector('.font-medium').textContent;
-                    if (confirm(`Voulez-vous vraiment supprimer l'utilisateur "${userName}" ?`)) {
-                        alert(`Utilisateur "${userName}" supprimé (simulation)`);
-                    }
-                }
-                
-                if (e.target.closest('.fa-edit')) {
-                    const userName = e.target.closest('tr').querySelector('.font-medium').textContent;
-                    alert(`Édition de l'utilisateur "${userName}" (simulation)`);
-                }
-                
-                if (e.target.closest('.fa-eye')) {
-                    const userName = e.target.closest('tr').querySelector('.font-medium').textContent;
-                    alert(`Affichage des détails de l'utilisateur "${userName}" (simulation)`);
-                }
-            });
-        });
-    </script>
+    <!-- Modal pour ajouter un utilisateur -->
+    <div id="add-user-modal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-40 hidden">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Ajouter un utilisateur</h3>
+            <form id="add-user-form">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Nom complet</label>
+                    <input type="text" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Rôle</label>
+                    <select class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="user">Utilisateur</option>
+                        <option value="moderator">Modérateur</option>
+                        <option value="admin">Administrateur</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="button" class="close-modal px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-50">Annuler</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Ajouter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

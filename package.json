@@ -1,0 +1,25 @@
+{
+  "name": "dashboard-admin",
+  "version": "1.0.0",
+  "description": "🌐 Voir le site en ligne",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mourtada-002/Dashboard-Admin.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Mourtada-002/Dashboard-Admin/issues"
+  },
+  "homepage": "https://github.com/Mourtada-002/Dashboard-Admin#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
