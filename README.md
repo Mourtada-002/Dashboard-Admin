@@ -1,17 +1,52 @@
 # Dashboard Admin
-🌐 Voir le site en ligne
 
-👉 https://dashboard-administrative.netlify.app/
+Dashboard Admin est une interface administrative moderne développée avec HTML, CSS, Tailwind CSS et JavaScript. Ce projet propose un tableau de bord élégant permettant de visualiser des statistiques, suivre des performances et gérer différentes données à travers une interface claire et intuitive.
 
-## Description
-**Dashboard Admin** est un tableau de bord administratif moderne qui permet de visualiser des **graphes, statistiques et informations clés** en un seul endroit. Il offre également des fonctionnalités de **gestion des utilisateurs** et de suivi des données pour faciliter la prise de décision.
+## Aperçu
 
-## Fonctionnalités
-- 📊 **Graphiques et statistiques** : suivi des indicateurs clés, tendances et performances.
-- 👥 **Gestion des utilisateurs** : ajouter, modifier ou supprimer des comptes.
-- 🖥️ **Interface intuitive** : design clair et responsive pour une navigation facile.
-- 🔒 **Sécurité** : accès contrôlé pour les administrateurs.
+Cette interface comprend :
+
+* Un tableau de bord moderne et responsive
+* Des graphiques et statistiques interactifs
+* Une gestion simplifiée des utilisateurs
+* Une navigation claire et intuitive
+* Un design professionnel adapté aux applications de gestion
 
 ## Technologies utilisées
-- **Frontend** : HTML, CSS, TailwindCSS, JavaScript
-- **Backend (optionnel)** : Node.js (pour la gestion des données et utilisateurs)
+
+* HTML5
+* CSS3
+* Tailwind CSS
+* JavaScript
+* Chart.js
+* Node.js
+
+## Installation
+
+Clonez le projet :
+
+```bash
+git clone https://github.com/Mourtada-002/Dashboard-Admin.git
+```
+
+Accédez au dossier du projet :
+
+```bash
+cd Dashboard-Admin
+```
+
+Installez les dépendances :
+
+```bash
+npm install
+```
+
+Lancez le projet :
+
+```bash
+npm start
+```
+
+## Licence
+
+Ce projet est distribué à des fins d'apprentissage et de démonstration.
