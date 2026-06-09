@@ -19,7 +19,6 @@ Cette interface comprend :
 * Tailwind CSS
 * JavaScript
 * Chart.js
-* Node.js
 
 ## Installation
 

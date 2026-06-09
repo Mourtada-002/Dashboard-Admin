@@ -1,571 +1,460 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body class="bg-gray-100">
-    <div class="flex h-screen">
-      <!-- Overlay pour mobile -->
-      <div class="overlay md:hidden"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdminDash — Centre de commande</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="relative">
 
-      <!-- Sidebar -->
-      <aside
-        class="sidebar w-64 bg-white shadow-lg fixed md:relative z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300"
-      >
-        <div class="p-6 border-b">
-          <h1 class="text-2xl font-bold text-blue-600 flex items-center">
-            <i class="fas fa-chart-line mr-3"></i>
-            Admin<span class="text-gray-800">Dash</span>
-          </h1>
-          <p class="text-gray-500 text-sm mt-2">
-            Tableau de bord administratif
-          </p>
-        </div>
+  <div id="boot-overlay"></div>
+  <div class="bg-mesh"><div class="mesh-blob"></div></div>
+  <div class="particles" aria-hidden="true">
+    <span class="particle"></span><span class="particle"></span><span class="particle"></span>
+    <span class="particle"></span><span class="particle"></span><span class="particle"></span>
+    <span class="particle"></span><span class="particle"></span><span class="particle"></span>
+    <span class="particle"></span>
+  </div>
 
-        <nav class="mt-6">
-          <a
-            href="#"
-            class="sidebar-link active flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50"
-            data-tab="dashboard"
-          >
-            <i class="fas fa-tachometer-alt mr-3"></i>
-            Tableau de bord
-          </a>
-          <a
-            href="#"
-            class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50"
-            data-tab="users"
-          >
-            <i class="fas fa-users mr-3"></i>
-            Utilisateurs
-          </a>
-          <a
-            href="#"
-            class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50"
-            data-tab="stats"
-          >
-            <i class="fas fa-chart-bar mr-3"></i>
-            Statistiques
-          </a>
-          <a
-            href="#"
-            class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50"
-            data-tab="settings"
-          >
-            <i class="fas fa-cog mr-3"></i>
-            Paramètres
-          </a>
-          <a
-            href="#"
-            class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50"
-            data-tab="reports"
-          >
-            <i class="fas fa-file-alt mr-3"></i>
-            Rapports
-          </a>
-        </nav>
 
-        <div class="absolute bottom-0 w-full p-6 border-t">
-          <div class="flex items-center">
-            <div
-              class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center"
-            >
-              <i class="fas fa-user text-blue-600"></i>
-            </div>
-            <div class="ml-3">
-              <p class="font-medium">Admin</p>
-              <p class="text-sm text-gray-500">Administrateur</p>
-            </div>
+  <div class="relative z-10 flex min-h-screen">
+    <div id="sidebar-overlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="anim-sidebar sidebar-glass fixed left-0 top-0 z-40 flex h-screen w-[260px] flex-col">
+      <div class="px-6 pt-8 pb-6">
+        <div class="flex items-center gap-3">
+          <div class="logo-icon flex h-10 w-10 items-center justify-center rounded-xl">
+            <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
           </div>
-        </div>
-      </aside>
-
-      <!-- Contenu principal -->
-      <main class="flex-1 overflow-y-auto p-4 md:p-6 w-full">
-        <!-- Header -->
-        <header class="flex justify-between items-center mb-6 md:mb-8">
           <div>
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-800">
-              Tableau de bord
-            </h2>
-            <p class="text-gray-600 text-sm md:text-base">
-              Bienvenue dans votre espace d'administration
-            </p>
-          </div>
-          <div class="flex items-center space-x-2 md:space-x-4">
-            <div class="relative hidden md:block">
-              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-              <input
-                type="text"
-                placeholder="Rechercher..."
-                class="search-input pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-              />
-            </div>
-            <div class="relative md:hidden">
-              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-              <input
-                type="text"
-                placeholder="Rechercher..."
-                class="mobile-search-input pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-40"
-              />
-            </div>
-            <button class="md:hidden" id="mobile-menu-button">
-              <i class="fas fa-bars text-2xl text-gray-700"></i>
-            </button>
-          </div>
-        </header>
-
-        <!-- Contenu des onglets -->
-        <div id="tab-content">
-          <!-- Onglet Dashboard -->
-          <div id="dashboard-tab" class="tab-pane active">
-            <!-- Cartes de statistiques -->
-            <div
-              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8"
-            >
-              <div class="bg-white rounded-xl shadow-md p-4 md:p-6 card-hover">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-gray-500 text-sm md:text-base">
-                      Utilisateurs total
-                    </p>
-                    <h3
-                      class="text-2xl md:text-3xl font-bold mt-1 md:mt-2"
-                      id="total-users"
-                    >
-                      1,248
-                    </h3>
-                  </div>
-                  <div
-                    class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-blue-100 flex items-center justify-center"
-                  >
-                    <i
-                      class="fas fa-users text-xl md:text-2xl text-blue-600"
-                    ></i>
-                  </div>
-                </div>
-                <div class="mt-3 md:mt-4">
-                  <span class="text-green-500 text-xs md:text-sm"
-                    ><i class="fas fa-arrow-up mr-1"></i> 12% ce mois</span
-                  >
-                </div>
-              </div>
-
-              <div class="bg-white rounded-xl shadow-md p-4 md:p-6 card-hover">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-gray-500 text-sm md:text-base">
-                      Nouveaux utilisateurs
-                    </p>
-                    <h3
-                      class="text-2xl md:text-3xl font-bold mt-1 md:mt-2"
-                      id="new-users"
-                    >
-                      48
-                    </h3>
-                  </div>
-                  <div
-                    class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-green-100 flex items-center justify-center"
-                  >
-                    <i
-                      class="fas fa-user-plus text-xl md:text-2xl text-green-600"
-                    ></i>
-                  </div>
-                </div>
-                <div class="mt-3 md:mt-4">
-                  <span class="text-green-500 text-xs md:text-sm"
-                    ><i class="fas fa-arrow-up mr-1"></i> 8% cette semaine</span
-                  >
-                </div>
-              </div>
-
-              <div class="bg-white rounded-xl shadow-md p-4 md:p-6 card-hover">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-gray-500 text-sm md:text-base">
-                      Taux d'activité
-                    </p>
-                    <h3
-                      class="text-2xl md:text-3xl font-bold mt-1 md:mt-2"
-                      id="activity-rate"
-                    >
-                      68%
-                    </h3>
-                  </div>
-                  <div
-                    class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-purple-100 flex items-center justify-center"
-                  >
-                    <i
-                      class="fas fa-chart-pie text-xl md:text-2xl text-purple-600"
-                    ></i>
-                  </div>
-                </div>
-                <div class="mt-3 md:mt-4">
-                  <span class="text-red-500 text-xs md:text-sm"
-                    ><i class="fas fa-arrow-down mr-1"></i> 3% ce mois</span
-                  >
-                </div>
-              </div>
-
-              <div class="bg-white rounded-xl shadow-md p-4 md:p-6 card-hover">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-gray-500 text-sm md:text-base">
-                      Temps moyen
-                    </p>
-                    <h3
-                      class="text-2xl md:text-3xl font-bold mt-1 md:mt-2"
-                      id="avg-time"
-                    >
-                      4.2m
-                    </h3>
-                  </div>
-                  <div
-                    class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-yellow-100 flex items-center justify-center"
-                  >
-                    <i
-                      class="fas fa-clock text-xl md:text-2xl text-yellow-600"
-                    ></i>
-                  </div>
-                </div>
-                <div class="mt-3 md:mt-4">
-                  <span class="text-green-500 text-xs md:text-sm"
-                    ><i class="fas fa-arrow-up mr-1"></i> 5% ce mois</span
-                  >
-                </div>
-              </div>
-            </div>
-
-            <!-- Graphiques et tableau -->
-            <div
-              class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8"
-            >
-              <!-- Graphique des utilisateurs -->
-              <div class="bg-white rounded-xl shadow-md p-4 md:p-6">
-                <div
-                  class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-2"
-                >
-                  <h3 class="text-lg md:text-xl font-bold text-gray-800">
-                    Utilisateurs actifs
-                  </h3>
-                  <select
-                    class="border rounded-lg px-3 py-1 md:py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
-                    id="chart-period"
-                  >
-                    <option value="week">Cette semaine</option>
-                    <option value="month" selected>Ce mois</option>
-                    <option value="year">Cette année</option>
-                  </select>
-                </div>
-                <div class="h-60 md:h-72">
-                  <canvas id="usersChart"></canvas>
-                </div>
-              </div>
-
-              <!-- Graphique de répartition -->
-              <div class="bg-white rounded-xl shadow-md p-4 md:p-6">
-                <h3
-                  class="text-lg md:text-xl font-bold text-gray-800 mb-4 md:mb-6"
-                >
-                  Répartition des utilisateurs
-                </h3>
-                <div class="h-60 md:h-72">
-                  <canvas id="distributionChart"></canvas>
-                </div>
-              </div>
-            </div>
-
-            <!-- Tableau des utilisateurs -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden">
-              <div class="p-4 md:p-6 border-b">
-                <div
-                  class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
-                >
-                  <h3 class="text-lg md:text-xl font-bold text-gray-800">
-                    Gestion des utilisateurs
-                  </h3>
-                  <button
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center w-full md:w-auto justify-center"
-                    id="add-user-btn"
-                  >
-                    <i class="fas fa-user-plus mr-2"></i>
-                    Ajouter un utilisateur
-                  </button>
-                </div>
-              </div>
-
-              <div class="p-4 md:p-6">
-                <!-- Barre de recherche et filtres -->
-                <div
-                  class="flex flex-col md:flex-row justify-between mb-4 md:mb-6 gap-4"
-                >
-                  <div class="relative w-full md:w-1/3">
-                    <i
-                      class="fas fa-search absolute left-3 top-3 text-gray-400"
-                    ></i>
-                    <input
-                      type="text"
-                      id="user-search"
-                      placeholder="Rechercher un utilisateur..."
-                      class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-
-                  <div class="flex flex-col sm:flex-row gap-2 md:gap-4">
-                    <select
-                      class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      id="filter-role"
-                    >
-                      <option value="">Tous les rôles</option>
-                      <option value="admin">Administrateur</option>
-                      <option value="user">Utilisateur</option>
-                      <option value="moderator">Modérateur</option>
-                    </select>
-
-                    <select
-                      class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      id="filter-status"
-                    >
-                      <option value="">Tous les statuts</option>
-                      <option value="active">Actif</option>
-                      <option value="inactive">Inactif</option>
-                    </select>
-                  </div>
-                </div>
-
-                <!-- Tableau -->
-                <div class="overflow-x-auto">
-                  <table class="w-full min-w-[600px]">
-                    <thead class="bg-gray-50">
-                      <tr>
-                        <th
-                          class="py-3 px-4 text-left font-medium text-gray-700"
-                        >
-                          Utilisateur
-                        </th>
-                        <th
-                          class="py-3 px-4 text-left font-medium text-gray-700"
-                        >
-                          Email
-                        </th>
-                        <th
-                          class="py-3 px-4 text-left font-medium text-gray-700"
-                        >
-                          Rôle
-                        </th>
-                        <th
-                          class="py-3 px-4 text-left font-medium text-gray-700"
-                        >
-                          Date d'inscription
-                        </th>
-                        <th
-                          class="py-3 px-4 text-left font-medium text-gray-700"
-                        >
-                          Statut
-                        </th>
-                        <th
-                          class="py-3 px-4 text-left font-medium text-gray-700"
-                        >
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody id="users-table-body">
-                      <!-- Les données seront insérées par JavaScript -->
-                    </tbody>
-                  </table>
-                </div>
-
-                <!-- Pagination -->
-                <div
-                  class="flex flex-col md:flex-row justify-between items-center mt-4 md:mt-6 gap-4"
-                >
-                  <p class="text-gray-600 text-sm md:text-base" id="user-count">
-                    Affichage de 10 utilisateurs sur 1248
-                  </p>
-                  <div class="flex space-x-2">
-                    <button
-                      class="px-3 py-1 border rounded-lg text-gray-700 hover:bg-gray-50 prev-page"
-                    >
-                      Précédent
-                    </button>
-                    <button
-                      class="px-3 py-1 border rounded-lg bg-blue-600 text-white page-btn active"
-                      data-page="1"
-                    >
-                      1
-                    </button>
-                    <button
-                      class="px-3 py-1 border rounded-lg text-gray-700 hover:bg-gray-50 page-btn"
-                      data-page="2"
-                    >
-                      2
-                    </button>
-                    <button
-                      class="px-3 py-1 border rounded-lg text-gray-700 hover:bg-gray-50 page-btn"
-                      data-page="3"
-                    >
-                      3
-                    </button>
-                    <button
-                      class="px-3 py-1 border rounded-lg text-gray-700 hover:bg-gray-50 next-page"
-                    >
-                      Suivant
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Onglet Utilisateurs -->
-          <div id="users-tab" class="tab-pane">
-            <div class="bg-white rounded-xl shadow-md p-6">
-              <h3 class="text-2xl font-bold text-gray-800 mb-6">
-                Gestion avancée des utilisateurs
-              </h3>
-              <p class="text-gray-600 mb-6">
-                Cette section sera développée pour inclure des fonctionnalités
-                avancées de gestion des utilisateurs.
-              </p>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="border rounded-lg p-4">
-                  <h4 class="font-bold text-lg mb-2">
-                    Importation d'utilisateurs
-                  </h4>
-                  <p class="text-gray-600 mb-4">
-                    Importez des utilisateurs depuis un fichier CSV ou Excel
-                  </p>
-                  <button
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-                  >
-                    <i class="fas fa-upload mr-2"></i>Importer
-                  </button>
-                </div>
-                <div class="border rounded-lg p-4">
-                  <h4 class="font-bold text-lg mb-2">Exportation de données</h4>
-                  <p class="text-gray-600 mb-4">
-                    Exportez la liste des utilisateurs dans différents formats
-                  </p>
-                  <button
-                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
-                  >
-                    <i class="fas fa-download mr-2"></i>Exporter
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Onglet Statistiques -->
-          <div id="stats-tab" class="tab-pane">
-            <div class="bg-white rounded-xl shadow-md p-6">
-              <h3 class="text-2xl font-bold text-gray-800 mb-6">
-                Statistiques détaillées
-              </h3>
-              <p class="text-gray-600 mb-6">
-                Des statistiques avancées seront disponibles dans cette section.
-              </p>
-            </div>
-          </div>
-
-          <!-- Onglet Paramètres -->
-          <div id="settings-tab" class="tab-pane">
-            <div class="bg-white rounded-xl shadow-md p-6">
-              <h3 class="text-2xl font-bold text-gray-800 mb-6">
-                Paramètres du système
-              </h3>
-              <p class="text-gray-600 mb-6">
-                Configurez les paramètres de votre tableau de bord ici.
-              </p>
-            </div>
-          </div>
-
-          <!-- Onglet Rapports -->
-          <div id="reports-tab" class="tab-pane">
-            <div class="bg-white rounded-xl shadow-md p-6">
-              <h3 class="text-2xl font-bold text-gray-800 mb-6">
-                Rapports et analyses
-              </h3>
-              <p class="text-gray-600 mb-6">
-                Générez et consultez des rapports détaillés sur l'activité.
-              </p>
-            </div>
+            <h1 class="font-heading text-xl font-bold tracking-tight text-white">Admin<span class="text-indigo-400">Dash</span></h1>
+            <p class="text-xs text-white/40">Centre de commande</p>
           </div>
         </div>
+      </div>
 
-        <!-- Footer -->
-        <footer
-          class="mt-6 md:mt-8 text-center text-gray-600 text-sm md:text-base"
-        >
-          <p>Dashboard Admin &copy; 2023 - Tous droits réservés</p>
-        </footer>
-      </main>
-    </div>
+      <nav class="flex-1 space-y-1 px-4">
+        <a href="#" class="nav-item active flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-white/70" data-page="page-dashboard">
+          <svg class="nav-icon h-5 w-5 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+          Tableau de bord
+        </a>
+        <a href="#" class="nav-item flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-white/70" data-page="page-users">
+          <svg class="nav-icon h-5 w-5 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          Utilisateurs
+        </a>
+        <a href="#" class="nav-item flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-white/70" data-page="page-statistics">
+          <svg class="nav-icon h-5 w-5 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          Statistiques
+        </a>
+        <a href="#" class="nav-item flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-white/70" data-page="page-settings">
+          <svg class="nav-icon h-5 w-5 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Paramètres
+        </a>
+        <a href="#" class="nav-item flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-white/70" data-page="page-reports">
+          <svg class="nav-icon h-5 w-5 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Rapports
+        </a>
+      </nav>
 
-    <!-- Modal pour ajouter un utilisateur -->
-    <div
-      id="add-user-modal"
-      class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-40 hidden"
-    >
-      <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">
-          Ajouter un utilisateur
-        </h3>
-        <form id="add-user-form">
-          <div class="mb-4">
-            <label class="block text-gray-700 mb-2">Nom complet</label>
-            <input
-              type="text"
-              class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+      <div class="p-4">
+        <div class="glass-card no-hover flex items-center gap-3 p-3">
+          <div class="relative">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=AdminUser&backgroundColor=6366f1" alt="Avatar" class="h-10 w-10 rounded-full border border-white/10" />
+            <span class="status-dot absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-[#0a0a0f]"></span>
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 mb-2">Email</label>
-            <input
-              type="email"
-              class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-sm font-semibold text-white">Marie Dupont</p>
+            <p class="text-xs text-white/40">Administratrice</p>
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 mb-2">Rôle</label>
-            <select
-              class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="user">Utilisateur</option>
-              <option value="moderator">Modérateur</option>
-              <option value="admin">Administrateur</option>
-            </select>
-          </div>
-          <div class="flex justify-end space-x-4 mt-6">
-            <button
-              type="button"
-              class="close-modal px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-50"
-            >
-              Annuler
-            </button>
-            <button
-              type="submit"
-              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-            >
+          <svg class="h-4 w-4 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div id="main-content" class="flex-1">
+      <div id="scrollContent">
+
+        <!-- PAGE: Dashboard -->
+        <div class="page active" id="page-dashboard">
+          <header id="topbar" class="anim-topbar mb-8 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <button id="hamburger-btn" class="hamburger-btn" aria-label="Menu">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
+              </button>
+              <div>
+                <h2 class="font-heading text-2xl font-bold text-white">Tableau de bord</h2>
+                <p class="mt-1 text-sm text-white/40">Vue d'ensemble — Juin 2026</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="search-glass flex items-center gap-2 rounded-xl px-4 py-2.5">
+                <svg class="h-4 w-4 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input type="search" placeholder="Rechercher..." class="w-52 bg-transparent text-sm text-white placeholder-white/30 outline-none" />
+              </div>
+              <button class="bell-btn relative rounded-xl p-2.5 text-white/50 hover:bg-white/5">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                <span class="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-indigo-500 ring-2 ring-[#0a0a0f]"></span>
+              </button>
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=AdminUser&backgroundColor=6366f1" alt="Profil" class="h-9 w-9 rounded-full border border-white/10 ring-2 ring-indigo-500/30" />
+            </div>
+          </header>
+
+          <section class="mb-8 grid grid-cols-4 gap-5">
+            <article class="anim-kpi glass-card p-5">
+              <div class="mb-4 flex items-start justify-between">
+                <div class="badge-indigo flex h-11 w-11 items-center justify-center rounded-xl shadow-lg">
+                  <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <span class="flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-400">
+                  <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>+12%
+                </span>
+              </div>
+              <p class="text-xs font-medium uppercase tracking-wider text-white/40">Utilisateurs total</p>
+              <p class="font-heading mt-1 text-3xl font-bold text-white"><span class="kpi-counter" data-target="1248" data-format="int">0</span></p>
+              <p class="mt-1 text-xs text-white/30">ce mois</p>
+            </article>
+
+            <article class="anim-kpi glass-card p-5">
+              <div class="mb-4 flex items-start justify-between">
+                <div class="badge-cyan flex h-11 w-11 items-center justify-center rounded-xl shadow-lg">
+                  <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                </div>
+                <span class="flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-400">
+                  <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>+8%
+                </span>
+              </div>
+              <p class="text-xs font-medium uppercase tracking-wider text-white/40">Nouveaux utilisateurs</p>
+              <p class="font-heading mt-1 text-3xl font-bold text-white"><span class="kpi-counter" data-target="48" data-format="int">0</span></p>
+              <p class="mt-1 text-xs text-white/30">cette semaine</p>
+            </article>
+
+            <article class="anim-kpi glass-card p-5">
+              <div class="mb-4 flex items-start justify-between">
+                <div class="badge-violet flex h-11 w-11 items-center justify-center rounded-xl shadow-lg">
+                  <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <span class="flex items-center gap-1 rounded-full bg-red-500/10 px-2 py-0.5 text-xs font-medium text-red-400">
+                  <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>-3%
+                </span>
+              </div>
+              <p class="text-xs font-medium uppercase tracking-wider text-white/40">Taux d'activité</p>
+              <p class="font-heading mt-1 text-3xl font-bold text-white"><span class="kpi-counter" data-target="68" data-format="percent">0</span><span class="text-2xl text-white/60">%</span></p>
+              <p class="mt-1 text-xs text-white/30">ce mois</p>
+            </article>
+
+            <article class="anim-kpi glass-card p-5">
+              <div class="mb-4 flex items-start justify-between">
+                <div class="badge-amber flex h-11 w-11 items-center justify-center rounded-xl shadow-lg">
+                  <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <span class="flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-400">
+                  <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>+5%
+                </span>
+              </div>
+              <p class="text-xs font-medium uppercase tracking-wider text-white/40">Temps moyen</p>
+              <p class="font-heading mt-1 text-3xl font-bold text-white"><span class="kpi-counter" data-target="4.2" data-format="decimal" data-suffix="m">0</span></p>
+              <p class="mt-1 text-xs text-white/30">ce mois</p>
+            </article>
+          </section>
+
+          <section class="grid grid-cols-5 gap-5">
+            <article id="chart-line-wrap" class="anim-chart glass-card col-span-3 p-6">
+              <div class="mb-6 flex items-center justify-between">
+                <div>
+                  <h3 class="font-heading text-lg font-semibold text-white">Utilisateurs actifs</h3>
+                  <p class="text-xs text-white/40">Évolution mensuelle 2025</p>
+                </div>
+                <select id="period-select" class="period-pill rounded-full px-4 py-1.5 text-xs font-medium">
+                  <option value="month">Ce mois</option>
+                  <option value="week">Cette semaine</option>
+                  <option value="year">Cette année</option>
+                </select>
+              </div>
+              <div class="relative h-64"><canvas id="lineChart"></canvas></div>
+            </article>
+
+            <article id="chart-donut-wrap" class="anim-chart glass-card col-span-2 p-6">
+              <div class="mb-4">
+                <h3 class="font-heading text-lg font-semibold text-white">Répartition</h3>
+                <p class="text-xs text-white/40">Types d'utilisateurs</p>
+              </div>
+              <div class="relative mx-auto h-52 w-52"><canvas id="donutChart"></canvas></div>
+              <div class="mt-6 space-y-2.5">
+                <div class="flex items-center justify-between text-sm">
+                  <div class="flex items-center gap-2"><span class="legend-dot legend-dot-indigo"></span><span class="text-white/70">Administrateurs</span></div>
+                  <span class="font-heading font-semibold text-white">15%</span>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                  <div class="flex items-center gap-2"><span class="legend-dot legend-dot-violet"></span><span class="text-white/70">Modérateurs</span></div>
+                  <span class="font-heading font-semibold text-white">20%</span>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                  <div class="flex items-center gap-2"><span class="legend-dot legend-dot-cyan"></span><span class="text-white/70">Utilisateurs</span></div>
+                  <span class="font-heading font-semibold text-white">65%</span>
+                </div>
+              </div>
+            </article>
+          </section>
+        </div>
+
+        <!-- PAGE: Utilisateurs -->
+        <div class="page" id="page-users">
+          <div class="mb-6 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <button class="hamburger-btn"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+              <h2 class="font-heading text-2xl font-bold text-white">Utilisateurs</h2>
+            </div>
+            <button id="add-user-btn" class="btn-primary flex items-center gap-2 px-5 py-2.5 text-sm">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
               Ajouter
             </button>
           </div>
-        </form>
+          <div class="mb-5 flex flex-wrap items-center gap-3">
+            <div class="search-glass flex flex-1 min-w-[200px] items-center gap-2 rounded-full px-4 py-2">
+              <svg class="h-4 w-4 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <input id="user-search" type="search" placeholder="Rechercher..." class="w-full bg-transparent text-sm text-white placeholder-white/30 outline-none" />
+            </div>
+            <select id="filter-role" class="glass-select rounded-full px-4 py-2 text-sm">
+              <option value="">Tous les rôles</option>
+              <option value="admin">Admin</option>
+              <option value="moderator">Modérateur</option>
+              <option value="user">Utilisateur</option>
+            </select>
+            <select id="filter-status" class="glass-select rounded-full px-4 py-2 text-sm">
+              <option value="">Tous les statuts</option>
+              <option value="active">Actif</option>
+              <option value="inactive">Inactif</option>
+            </select>
+          </div>
+          <div class="glass-table-wrap mb-5">
+            <table class="data-table">
+              <thead><tr><th>Nom</th><th>Email</th><th>Rôle</th><th>Statut</th><th>Inscription</th><th>Actions</th></tr></thead>
+              <tbody id="users-table-body"></tbody>
+            </table>
+          </div>
+          <div id="users-pagination" class="flex items-center justify-center gap-2"></div>
+        </div>
+
+        <!-- PAGE: Statistiques -->
+        <div class="page" id="page-statistics">
+          <div class="mb-6 flex items-center gap-4">
+            <button class="hamburger-btn"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+            <div>
+              <h2 class="font-heading text-2xl font-bold text-white">Statistiques</h2>
+              <p class="text-sm text-white/40">Analyse détaillée de l'activité</p>
+            </div>
+          </div>
+          <section class="mb-6 grid grid-cols-3 gap-5">
+            <article class="glass-card p-5"><p class="text-xs font-medium uppercase tracking-wider text-white/40">Sessions aujourd'hui</p><p class="mini-kpi-value mt-2">342</p></article>
+            <article class="glass-card p-5"><p class="text-xs font-medium uppercase tracking-wider text-white/40">Pages vues</p><p class="mini-kpi-value mt-2">8 491</p></article>
+            <article class="glass-card p-5"><p class="text-xs font-medium uppercase tracking-wider text-white/40">Taux de rebond</p><p class="mini-kpi-value mt-2">34%</p></article>
+          </section>
+          <article class="glass-card mb-6 p-6">
+            <h3 class="font-heading mb-1 text-lg font-semibold text-white">Activité hebdomadaire</h3>
+            <p class="mb-4 text-xs text-white/40">Sessions par jour</p>
+            <div class="relative h-72"><canvas id="barWeeklyChart"></canvas></div>
+          </article>
+          <section class="mb-6 grid grid-cols-2 gap-5">
+            <article class="glass-card p-6">
+              <h3 class="font-heading mb-1 text-lg font-semibold text-white">Nouvelles inscriptions</h3>
+              <p class="mb-4 text-xs text-white/40">30 derniers jours</p>
+              <div class="relative h-56"><canvas id="signupsLineChart"></canvas></div>
+            </article>
+            <article class="glass-card p-6">
+              <h3 class="font-heading mb-1 text-lg font-semibold text-white">Performance</h3>
+              <p class="mb-4 text-xs text-white/40">Indicateurs clés</p>
+              <div class="relative h-56"><canvas id="radarChart"></canvas></div>
+            </article>
+          </section>
+          <article class="glass-table-wrap p-1">
+            <div class="px-5 py-4"><h3 class="font-heading text-lg font-semibold text-white">Top pages visitées</h3></div>
+            <table class="data-table">
+              <thead><tr><th>Page</th><th>Visites</th><th>Durée moy.</th><th>Taux rebond</th></tr></thead>
+              <tbody>
+                <tr><td class="text-white font-medium">/</td><td class="text-white/60">12 450</td><td class="text-white/60">2m 14s</td><td class="text-white/60">28%</td></tr>
+                <tr><td class="text-white font-medium">/dashboard</td><td class="text-white/60">8 920</td><td class="text-white/60">4m 32s</td><td class="text-white/60">12%</td></tr>
+                <tr><td class="text-white font-medium">/users</td><td class="text-white/60">5 340</td><td class="text-white/60">3m 08s</td><td class="text-white/60">18%</td></tr>
+                <tr><td class="text-white font-medium">/stats</td><td class="text-white/60">3 210</td><td class="text-white/60">5m 45s</td><td class="text-white/60">9%</td></tr>
+                <tr><td class="text-white font-medium">/settings</td><td class="text-white/60">1 890</td><td class="text-white/60">1m 52s</td><td class="text-white/60">42%</td></tr>
+                <tr><td class="text-white font-medium">/reports</td><td class="text-white/60">1 240</td><td class="text-white/60">3m 20s</td><td class="text-white/60">22%</td></tr>
+              </tbody>
+            </table>
+          </article>
+        </div>
+
+        <!-- PAGE: Paramètres -->
+        <div class="page" id="page-settings">
+          <div class="mb-6 flex items-center gap-4">
+            <button class="hamburger-btn"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+            <h2 class="font-heading text-2xl font-bold text-white">Paramètres</h2>
+          </div>
+          <div class="settings-tabs">
+            <button class="settings-tab active" data-tab="tab-profil">Profil</button>
+            <button class="settings-tab" data-tab="tab-securite">Sécurité</button>
+            <button class="settings-tab" data-tab="tab-notifications">Notifications</button>
+            <button class="settings-tab" data-tab="tab-apparence">Apparence</button>
+          </div>
+
+          <div class="settings-panel active glass-card p-6" id="tab-profil">
+            <div class="mb-6 flex items-center gap-6">
+              <div class="avatar-upload">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=AdminUser&backgroundColor=6366f1" alt="Avatar" />
+                <div class="avatar-upload-overlay">
+                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  Changer
+                </div>
+              </div>
+              <div><p class="font-heading text-lg font-semibold text-white">Marie Dupont</p><p class="text-sm text-white/40">Administratrice</p></div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div><label class="mb-1.5 block text-xs text-white/40">Nom complet</label><input type="text" value="Marie Dupont" class="glass-input w-full rounded-xl px-4 py-2.5 text-sm" /></div>
+              <div><label class="mb-1.5 block text-xs text-white/40">Email</label><input type="email" value="marie.dupont@admindash.fr" class="glass-input w-full rounded-xl px-4 py-2.5 text-sm" /></div>
+              <div><label class="mb-1.5 block text-xs text-white/40">Téléphone</label><input type="tel" value="+33 6 12 34 56 78" class="glass-input w-full rounded-xl px-4 py-2.5 text-sm" /></div>
+              <div><label class="mb-1.5 block text-xs text-white/40">Localisation</label><input type="text" value="Paris, France" class="glass-input w-full rounded-xl px-4 py-2.5 text-sm" /></div>
+              <div class="col-span-2"><label class="mb-1.5 block text-xs text-white/40">Bio</label><textarea rows="3" class="glass-input w-full rounded-xl px-4 py-2.5 text-sm resize-none">Administratrice passionnée par l'expérience utilisateur et la data.</textarea></div>
+            </div>
+            <button id="save-profile-btn" class="btn-primary mt-6 px-6 py-2.5 text-sm">Sauvegarder</button>
+          </div>
+
+          <div class="settings-panel glass-card p-6" id="tab-securite">
+            <h3 class="font-heading mb-4 text-lg font-semibold text-white">Changer le mot de passe</h3>
+            <div class="mb-6 grid max-w-lg gap-4">
+              <div class="password-field"><label class="mb-1.5 block text-xs text-white/40">Mot de passe actuel</label><input type="password" value="••••••••" class="glass-input w-full rounded-xl px-4 py-2.5 pr-10 text-sm" /><button type="button" class="password-toggle"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button></div>
+              <div class="password-field"><label class="mb-1.5 block text-xs text-white/40">Nouveau mot de passe</label><input type="password" class="glass-input w-full rounded-xl px-4 py-2.5 pr-10 text-sm" /><button type="button" class="password-toggle"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button></div>
+              <div class="password-field"><label class="mb-1.5 block text-xs text-white/40">Confirmer</label><input type="password" class="glass-input w-full rounded-xl px-4 py-2.5 pr-10 text-sm" /><button type="button" class="password-toggle"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button></div>
+            </div>
+            <div class="toggle-row mb-6 max-w-lg"><div><p class="text-sm font-medium text-white">Authentification à deux facteurs</p><p class="text-xs text-white/40">Sécurisez votre compte</p></div><label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label></div>
+            <h3 class="font-heading mb-3 text-lg font-semibold text-white">Sessions actives</h3>
+            <div class="space-y-3 max-w-lg">
+              <div class="session-item"><div><p class="text-sm font-medium text-white">MacBook Pro · Paris</p><p class="text-xs text-white/40">Actif maintenant · Chrome</p></div><button class="btn-ghost-danger px-3 py-1 text-xs revoke-session">Révoquer</button></div>
+              <div class="session-item"><div><p class="text-sm font-medium text-white">iPhone 15 · Mobile</p><p class="text-xs text-white/40">Il y a 2h · Safari</p></div><button class="btn-ghost-danger px-3 py-1 text-xs revoke-session">Révoquer</button></div>
+              <div class="session-item"><div><p class="text-sm font-medium text-white">Chrome · Windows</p><p class="text-xs text-white/40">Il y a 1j · Edge</p></div><button class="btn-ghost-danger px-3 py-1 text-xs revoke-session">Révoquer</button></div>
+            </div>
+          </div>
+
+          <div class="settings-panel glass-card p-6" id="tab-notifications">
+            <div class="space-y-3 max-w-2xl">
+              <div class="toggle-row"><div><p class="text-sm font-medium text-white">Nouvelles inscriptions</p><p class="text-xs text-white/40">Notifier à chaque nouvel utilisateur</p></div><label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label></div>
+              <div class="toggle-row"><div><p class="text-sm font-medium text-white">Alertes de sécurité</p><p class="text-xs text-white/40">Connexions suspectes</p></div><label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label></div>
+              <div class="toggle-row"><div><p class="text-sm font-medium text-white">Rapports hebdomadaires</p><p class="text-xs text-white/40">Résumé chaque lundi</p></div><label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label></div>
+              <div class="toggle-row"><div><p class="text-sm font-medium text-white">Mises à jour système</p><p class="text-xs text-white/40">Nouvelles versions disponibles</p></div><label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label></div>
+              <div class="toggle-row"><div><p class="text-sm font-medium text-white">Emails marketing</p><p class="text-xs text-white/40">Actualités et offres</p></div><label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label></div>
+            </div>
+            <button id="save-notif-btn" class="btn-primary mt-6 px-6 py-2.5 text-sm">Sauvegarder</button>
+          </div>
+
+          <div class="settings-panel glass-card p-6" id="tab-apparence">
+            <h3 class="font-heading mb-3 text-sm font-semibold text-white">Couleur d'accent</h3>
+            <div class="mb-6 flex gap-3">
+              <button class="color-swatch swatch-indigo active" data-color="#6366f1"></button>
+              <button class="color-swatch swatch-cyan" data-color="#22d3ee"></button>
+              <button class="color-swatch swatch-violet" data-color="#8b5cf6"></button>
+              <button class="color-swatch swatch-rose" data-color="#f43f5e"></button>
+              <button class="color-swatch swatch-amber" data-color="#f59e0b"></button>
+              <button class="color-swatch swatch-emerald" data-color="#10b981"></button>
+            </div>
+            <div class="toggle-row mb-6 max-w-md"><div><p class="text-sm font-medium text-white">Mode compact</p><p class="text-xs text-white/40">Réduit l'espacement global</p></div><label class="toggle-switch"><input type="checkbox" id="compact-toggle" /><span class="toggle-slider"></span></label></div>
+            <h3 class="font-heading mb-3 text-sm font-semibold text-white">Langue</h3>
+            <div class="flex gap-2">
+              <button class="lang-pill active">Français</button>
+              <button class="lang-pill">English</button>
+              <button class="lang-pill">العربية</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAGE: Rapports -->
+        <div class="page" id="page-reports">
+          <div class="mb-6 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <button class="hamburger-btn"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+              <h2 class="font-heading text-2xl font-bold text-white">Rapports</h2>
+            </div>
+            <button id="generate-report-btn" class="btn-primary flex items-center gap-2 px-5 py-2.5 text-sm">
+              <span class="btn-text">Générer un rapport</span>
+              <span class="spinner"></span>
+            </button>
+          </div>
+
+          <section class="mb-6 grid grid-cols-3 gap-5">
+            <article class="report-card glass-card p-6">
+              <div class="badge-indigo mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-xl">📊</div>
+              <h3 class="font-heading mb-1 font-semibold text-white">Rapport Utilisateurs</h3>
+              <p class="mb-4 text-sm text-white/40">Export complet des données utilisateurs</p>
+              <button data-download-report class="btn-glass px-4 py-2 text-sm">Télécharger</button>
+            </article>
+            <article class="report-card glass-card p-6">
+              <div class="badge-cyan mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-xl">📈</div>
+              <h3 class="font-heading mb-1 font-semibold text-white">Rapport Activité</h3>
+              <p class="mb-4 text-sm text-white/40">Analyse de l'activité sur 30 jours</p>
+              <button data-download-report class="btn-glass px-4 py-2 text-sm">Télécharger</button>
+            </article>
+            <article class="report-card glass-card p-6">
+              <div class="badge-violet mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-xl">🛡️</div>
+              <h3 class="font-heading mb-1 font-semibold text-white">Rapport Sécurité</h3>
+              <p class="mb-4 text-sm text-white/40">Journal des connexions et incidents</p>
+              <button data-download-report class="btn-glass px-4 py-2 text-sm">Télécharger</button>
+            </article>
+          </section>
+
+          <div class="mb-5 flex flex-wrap items-center gap-3">
+            <select class="glass-select rounded-full px-4 py-2 text-sm"><option>Tous les types</option><option>Utilisateurs</option><option>Activité</option><option>Sécurité</option></select>
+            <input type="date" class="glass-input rounded-full px-4 py-2 text-sm" value="2026-01-01" />
+            <span class="text-white/30 text-sm">→</span>
+            <input type="date" class="glass-input rounded-full px-4 py-2 text-sm" value="2026-06-08" />
+          </div>
+
+          <div class="glass-table-wrap" id="reports-table-container">
+            <table class="data-table">
+              <thead><tr><th>Nom du rapport</th><th>Type</th><th>Généré le</th><th>Taille</th><th>Statut</th><th>Actions</th></tr></thead>
+              <tbody id="reports-tbody">
+                <tr><td class="text-white font-medium">users_export_juin_2026.csv</td><td><span class="role-badge badge-type-users">Utilisateurs</span></td><td class="text-white/50">08 juin 2026</td><td class="text-white/50">2,4 Mo</td><td><span class="status-badge badge-status-active">Terminé</span></td><td><div class="flex gap-1"><button class="btn-icon" data-download-report title="Télécharger"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></button><button class="btn-icon" data-delete-report title="Supprimer"><svg class="h-4 w-4 text-red-400/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>
+                <tr><td class="text-white font-medium">activite_mai_2026.pdf</td><td><span class="role-badge badge-type-activity">Activité</span></td><td class="text-white/50">01 juin 2026</td><td class="text-white/50">8,1 Mo</td><td><span class="status-badge badge-status-active">Terminé</span></td><td><div class="flex gap-1"><button class="btn-icon" data-download-report><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></button><button class="btn-icon" data-delete-report><svg class="h-4 w-4 text-red-400/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>
+                <tr><td class="text-white font-medium">securite_q2_2026.pdf</td><td><span class="role-badge badge-type-security">Sécurité</span></td><td class="text-white/50">28 mai 2026</td><td class="text-white/50">5,7 Mo</td><td><span class="status-badge badge-report-progress pulse-amber">En cours</span></td><td><div class="flex gap-1"><button class="btn-icon" data-download-report><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></button><button class="btn-icon" data-delete-report><svg class="h-4 w-4 text-red-400/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>
+                <tr><td class="text-white font-medium">users_avril_2026.csv</td><td><span class="role-badge badge-type-users">Utilisateurs</span></td><td class="text-white/50">15 mai 2026</td><td class="text-white/50">2,1 Mo</td><td><span class="status-badge badge-status-active">Terminé</span></td><td><div class="flex gap-1"><button class="btn-icon" data-download-report><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></button><button class="btn-icon" data-delete-report><svg class="h-4 w-4 text-red-400/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>
+                <tr><td class="text-white font-medium">activite_avril_2026.pdf</td><td><span class="role-badge badge-type-activity">Activité</span></td><td class="text-white/50">02 mai 2026</td><td class="text-white/50">7,3 Mo</td><td><span class="status-badge badge-status-inactive">Échec</span></td><td><div class="flex gap-1"><button class="btn-icon" data-download-report><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></button><button class="btn-icon" data-delete-report><svg class="h-4 w-4 text-red-400/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
     </div>
+  </div>
 
-    <script src="script.js"></script>
-  </body>
+  <!-- Modal -->
+  <div id="add-user-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <h3 class="font-heading mb-1 text-xl font-bold text-white">Ajouter un utilisateur</h3>
+      <p class="mb-6 text-sm text-white/40">Remplissez les informations ci-dessous</p>
+      <div class="space-y-4">
+        <div><label class="mb-1.5 block text-xs text-white/40">Nom complet</label><input id="new-name" type="text" class="glass-input w-full rounded-xl px-4 py-2.5 text-sm" placeholder="Jean Dupont" /></div>
+        <div><label class="mb-1.5 block text-xs text-white/40">Email</label><input id="new-email" type="email" class="glass-input w-full rounded-xl px-4 py-2.5 text-sm" placeholder="jean@exemple.fr" /></div>
+        <div><label class="mb-1.5 block text-xs text-white/40">Rôle</label><select id="new-role" class="glass-select w-full rounded-xl px-4 py-2.5 text-sm"><option value="user">Utilisateur</option><option value="moderator">Modérateur</option><option value="admin">Admin</option></select></div>
+        <div><label class="mb-1.5 block text-xs text-white/40">Mot de passe</label><input type="password" class="glass-input w-full rounded-xl px-4 py-2.5 text-sm" placeholder="••••••••" /></div>
+        <div class="flex justify-end gap-3 pt-2">
+          <button id="modal-cancel" class="btn-glass px-5 py-2.5 text-sm">Annuler</button>
+          <button id="modal-confirm" class="btn-primary px-5 py-2.5 text-sm">Créer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" aria-live="polite"></div>
+  <button id="scroll-top-btn" aria-label="Remonter">
+    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
 </html>
