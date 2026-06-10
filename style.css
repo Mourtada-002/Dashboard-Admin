@@ -9,8 +9,11 @@
     html{scrollbar-width:thin;scrollbar-color:rgba(99,102,241,.4) transparent;}
     ::-webkit-scrollbar{width:4px;height:4px;}
     ::-webkit-scrollbar-thumb{background:rgba(99,102,241,.4);border-radius:2px;}
-    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:rgba(255,255,255,.85);overflow-x:hidden;min-height:100vh;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:rgba(255,255,255,.85);overflow:hidden;height:100vh;min-height:100vh;}
     h1,h2,h3,.font-heading{font-family:'Space Grotesk',sans-serif;}
+    img, svg { max-width: 100%; height: auto; }
+
+
 
     /* ── Boot overlay ── */
     #boot-overlay{position:fixed;inset:0;background:#000;z-index:9999;pointer-events:none;transition:opacity .5s ease;}
@@ -107,8 +110,9 @@
 
     /* ── SPA layout ── */
     #main-content{margin-left:260px;transition:margin-left .3s;}
-    #scrollContent{height:100vh;overflow-y:auto;overflow-x:hidden;padding:2rem;}
+    #scrollContent{height:100dvh;overflow-y:auto;overflow-x:hidden;padding:2rem;}
     .page{display:none;opacity:0;transform:translateY(10px);transition:opacity .25s,transform .25s;}
+
     .page.active{display:block;opacity:1;transform:translateY(0);}
     #sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:35;opacity:0;pointer-events:none;transition:opacity .3s;}
     #sidebar-overlay.active{opacity:1;pointer-events:auto;}
@@ -322,8 +326,21 @@
        RESPONSIVE — MOBILE (≤ 640 px)
        ══════════════════════════════════════════ */
     @media (max-width: 640px) {
+      /* ── Containment fix ── */
+      #scrollContent, .page {
+        max-width: 100vw;
+        overflow-x: hidden;
+        box-sizing: border-box;
+      }
+      .page > * {
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
       /* ── Layout global ── */
       #scrollContent { padding: 1rem; }
+
+
 
       /* ── Topbar Dashboard ── */
       #topbar { gap: .6rem; }
@@ -336,9 +353,11 @@
 
       /* ── Page headers universels ── */
       .page > div:first-child.flex,
-      .page > header { flex-wrap: wrap; gap: .5rem; }
+      .page > header { flex-wrap: wrap; gap: 1rem; max-width: 100%; }
       .page h2.text-2xl { font-size: 1.2rem !important; }
-      .page > div:first-child .btn-primary { font-size: .8rem; padding: .5rem 1rem; }
+      .page > div:first-child .btn-primary { font-size: .8rem; padding: .5rem 1rem; max-width: 100%; }
+
+
 
       /* ── KPI Dashboard : 1 colonne ── */
       #page-dashboard section.grid.grid-cols-4 { grid-template-columns: 1fr; }
@@ -369,9 +388,10 @@
         display: block;
         width: 100%;
         max-width: 100%;
+        box-sizing: border-box;
       }
       /* Tableau : largeur fixe, noms sans retour ligne */
-      #page-users .data-table { min-width: 440px; }
+      #page-users .data-table { min-width: 440px; max-width: none; }
       #page-users .data-table tbody td:nth-child(1) > div {
         white-space: nowrap;
         overflow: hidden;
@@ -451,9 +471,10 @@
         display: block;
         width: 100%;
         max-width: 100%;
+        box-sizing: border-box;
       }
       /* Masquer Généré + Taille, garder Nom/Type/Statut/Actions */
-      #page-reports .data-table { min-width: 320px; }
+      #page-reports .data-table { min-width: 320px; max-width: none; }
       #page-reports .data-table thead th:nth-child(3),
       #page-reports .data-table tbody td:nth-child(3) { display: none; }
       #page-reports .data-table thead th:nth-child(4),
