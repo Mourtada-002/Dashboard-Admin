@@ -53,12 +53,11 @@ function showPage(id) {
   const chartMap = { 'page-dashboard':['line','donut'], 'page-statistics':['bar','signups','radar'] };
   (chartMap[currentPage] || []).forEach(destroyChart);
 
-  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); });
   document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === id));
 
   const target = document.getElementById(id);
   if (!target) return;
-  target.style.display = 'block';
   requestAnimationFrame(() => requestAnimationFrame(() => target.classList.add('active')));
 
   currentPage = id;

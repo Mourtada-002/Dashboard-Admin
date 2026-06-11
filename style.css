@@ -114,6 +114,7 @@
     .page{display:none;opacity:0;transform:translateY(10px);transition:opacity .25s,transform .25s;}
 
     .page.active{display:block;opacity:1;transform:translateY(0);}
+    .page:not(.active){display:none !important;}
     #sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:35;opacity:0;pointer-events:none;transition:opacity .3s;}
     #sidebar-overlay.active{opacity:1;pointer-events:auto;}
     .hamburger-btn{display:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:.75rem;padding:.625rem;cursor:pointer;transition:all .2s;color:rgba(255,255,255,.7);}
