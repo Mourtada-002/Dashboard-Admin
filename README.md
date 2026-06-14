@@ -1,51 +1,20 @@
 # Dashboard Admin
 
-Dashboard Admin est une interface administrative moderne développée avec HTML, CSS, Tailwind CSS et JavaScript. Ce projet propose un tableau de bord élégant permettant de visualiser des statistiques, suivre des performances et gérer différentes données à travers une interface claire et intuitive.
+A **modern admin dashboard** built with HTML, CSS, Tailwind CSS and JavaScript, featuring statistics, interactive charts and management tools.
 
-## Aperçu
+## Features
 
-Cette interface comprend :
+**Modern Component Architecture** – Modular HTML structure organized into distinct dashboard sections for scalability and clean separation of concerns  
+**Interactive Charts & Statistics** – Dynamic data visualizations powered by Chart.js for real-time performance tracking  
+**SPA Navigation** – Smooth page transitions without full reloads for a fluid, app-like experience  
+**Glassmorphism Design** – Dark UI aesthetic with depth, blur effects, and layered transparency for a high-end feel  
+**Responsive Layout** – Fully adaptive interface built with Tailwind CSS utility classes for all screen sizes  
+**Optimized Performance** – Lightweight vanilla JS with efficient DOM handling and fast load times  
 
-* Un tableau de bord moderne et responsive
-* Des graphiques et statistiques interactifs
-* Une gestion simplifiée des utilisateurs
-* Une navigation claire et intuitive
-* Un design professionnel adapté aux applications de gestion
+## Technologies Used
 
-## Technologies utilisées
-
-* HTML5
-* CSS3
-* Tailwind CSS
-* JavaScript
-* Chart.js
-
-## Installation
-
-Clonez le projet :
-
-```bash
-git clone https://github.com/Mourtada-002/Dashboard-Admin.git
-```
-
-Accédez au dossier du projet :
-
-```bash
-cd Dashboard-Admin
-```
-
-Installez les dépendances :
-
-```bash
-npm install
-```
-
-Lancez le projet :
-
-```bash
-npm start
-```
-
-## Licence
-
-Ce projet est distribué à des fins d'apprentissage et de démonstration.
+- **HTML5** – Semantic structure for scalable, accessible markup
+- **Tailwind CSS** – Utility-first styling for rapid, consistent layouts
+- **JavaScript** – Client-side interactivity and SPA routing logic
+- **Chart.js** – Flexible charting library for statistical data rendering
+- **Node.js / Express** – Lightweight local dev server and asset bundling
